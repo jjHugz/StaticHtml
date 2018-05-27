@@ -1047,7 +1047,7 @@
           <!-- model end -->   
         </div>
         <div class="row">
-          <p class="mainitem">1111111111111</p><br/>
+          <p class="mainitem" name="111">1111111111111</p><br/>
           <p class="mainitem">1111111111111</p><br/>
           <p class="mainitem">1111111111111</p><br/>
         </div>
@@ -1112,6 +1112,9 @@
     $(function(){
       $(".mainitem").click(function(){
         $(this).addClass("highlight").siblings().removeClass("highlight");
+      });
+      $("p[name=111]").click(function(){
+        alert("test selector");
       });
     });
   </script>

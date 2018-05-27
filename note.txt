@@ -97,4 +97,31 @@ function f1(){
 　　　　　　jQuery.publish("done");
 　　　　}, 1000);
 　　}
-ssh-keygen  -t rsa -C “762429090@qq.com”
+
+2018/05/27 10:00
+Git 指令
+git add .  一次性添加文件
+git commit -m "***"  提交到版本库
+cd ***  进入文件夹
+cd ..  返回上级
+git rm * -r  删除文件及文件夹
+git ls-files  查看版本库中文件
+
+2018/05/27 16:00
+asp.net中关于表单提交几点问题：
+1.生命周期，客户端浏览器发起请求-服务端处理-服务端响应
+2.请求分为get和post，区别如下：
+a.get会将请求参数附加在url中，post是隐藏在http请求中
+b.get附加参数长度有限制，post没有
+C.post请求提交后再刷新时浏览器会有提示框，是否要再次提交
+3.表单提交只会传递类型为input/textarea/select且带有name属性的value值回去，其他类似div是不行的
+4.如果想要提交div的值，只能通过隐藏的input来进行绑定
+<form action="./test.php">
+<input type="hidden" name="IsPostBack" value="true"></input> //为了知道是初次进入页面还是点击提交表单后
+<input type="hidden" name="num1" value="@value"></input>     //为了保存div这类元素的值
+<div value="@value" width="@value"></div>
+</form>
+5.asp.net中自带IsPostBack/viewstate功能
+a.IsPostBack时用来判断是初次进入页面还是点击提交表单后的请求
+b.viewstate其实就是因为类似div的表单元素不能提交value，asp.net做的隐藏的存储其值的地方，以供下次读取
+而类似input在viewstate中是找不到的
