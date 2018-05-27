@@ -1,0 +1,100 @@
+2018/05/26 11:00
+由于接触到模块化的概念，今天上午查阅了相关资料，现做一个初步总结
+javascript模块化:
+问题：
+1.在编写脚本文件时难免会遇到的命名冲突问题，不同的人在开发时难免会想要使用同样的全局变量名，引起冲突。
+后来想要通过命名空间来规范命名，这样的方式带来的是极大的不方便。
+var org = {};
+org.CoolSite = {};
+org.CoolSite.Utils = {};
+
+org.CoolSite.Utils.each = function (arr) {
+  // 实现代码
+};
+
+org.CoolSite.Utils.log = function (str) {
+  // 实现代码
+};
+2.在编写脚本时同样会遇到需要依赖关系，繁琐的依赖，以及依赖之间的先后引用顺序问题。
+<script src="util.js"></script>
+<script src="dialog.js"></script>
+<script>
+  org.CoolSite.Dialog.init({ /* 传入配置 */ });
+</script>
+
+解决办法。模块化概念的提出，以下为两种模块化规范：
+1.AMD（异步模块定义），主要特点：提前声明所有依赖，执行依赖模块----RequireJS
+定义方式：
+a.     
+define(['./a','./b'],function(a,b){ //依赖必须一开始就写好
+    to do
+});
+
+b.固定为require,exports, module（modules/wrappings格式） 
+define(function(require,exports,module){
+    var base = require('base');
+    exports.show = function(){
+        do something with module base
+    }
+});
+
+2.CMD（common通用模块定义），主要特点:依赖就近书写----------------SeaJS
+定义方式：
+a.只有require,exports, module（modules/wrappings格式） 
+define(function(require,exports,module){
+    var a = require('./a');
+    //do with a
+    ///
+    var b = require('./b');//依赖就近书写
+    //do with b
+    ///
+})
+
+html/css模块化：
+1.提取不同页面通用样式，实现基本元素的复用
+2.提取公用模块，如：导航栏/版本信息等
+开发模式：先划分所有页面公共模块，有人负责框架，有人负责非重复性的模块开发，然后进行框架和模块的整合
+原则：
+1.按结构呈现进行模块划分，只要结构外观一致，就认为是一个模块，而不是按功能
+2.模块稳固，考虑到数据遍历的合理性，是否考虑到dom节点的可操作性，是否考虑到因扩展造成的抗破坏行
+3.模块自适应，不可设置高度宽度
+4.模块统一边距
+5.栅格化
+
+前端模块化：
+AngularJS前端模块化MVC框架,此内容还需进一步研究
+
+2018/05/26 22:00
+在研究html页面之间传值的过程中，偶然发现一个话题：javascript的异步，先做初步总结，再总结html页面传值
+观点：
+1.javascript引擎是单线程的，浏览器只有一个线程在运行javascript程序。
+2.JavaScript和UI线程是互斥的，js的执行会阻塞页面的渲染。
+3.javascript包含主线程和消息队列，同步任务进入主线程，异步任务（IO事件，这里解释一下：例如ajax发出异步数据请求
+浏览器新开线程请求，是在请求状态变更后，将状态变更事件放入队列）/用户事件（点击等）/定时器（settimeout，
+定时计数器并不是由JavaScript引擎计数的,因为JavaScript引擎是单线程）会进入消息队列，等待主线程中同步任务执行完毕，后开始逐个执行消息队列
+//凡是涉及回调的都是异步//
+下面讲讲单独两个函数之间异步实现的几种方式：假定有两个函数f1和f2，后者等待前者的执行结果
+1.回调函数，将f2作为f1的回调函数即可,函数之间耦合度太高
+function f1(callback){
+    settimeout(function(){
+        //f1..
+        callback();
+    },1000);
+};
+2.事件监听，去耦合，但是由于事件的原因，流程不清晰
+f1.on('done',f2);
+function f1(){
+    settimeout(function(){
+        //f1
+        f1.trigger('done');
+    },1000);
+}
+3.发布/订阅，采用的是Ben Alman的Tiny Pub/Sub，这是jQuery的一个插件
+jQuery.subscribe("done", f2);
+function f1(){
+　　　　setTimeout(function () {
+　　　　　　// f1的任务代码
+　　　　　　jQuery.publish("done");
+　　　　}, 1000);
+　　}
+ssh-keygen  -t rsa -C “762429090@qq.com”
