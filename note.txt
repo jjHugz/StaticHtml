@@ -125,3 +125,15 @@ C.post请求提交后再刷新时浏览器会有提示框，是否要再次提�
 a.IsPostBack时用来判断是初次进入页面还是点击提交表单后的请求
 b.viewstate其实就是因为类似div的表单元素不能提交value，asp.net做的隐藏的存储其值的地方，以供下次读取
 而类似input在viewstate中是找不到的
+
+2018/05/28 17:00
+AngularJS一些重要组成部分：
+1.作用域/控制范围Scope，负责view和Controller之间的数据交互，View中使用指令ng-model="***",Controller中使用语法$Scope.***
+，Scope在view和Controller之间建立双向的数据绑定
+2.Controller创建一块Scope，继承于Html父节点的Scope，根Scope为$rootScope,Controller中可申明属性和函数
+note:这里的继承，在子Scope中使用父Scope普通类型的变量，子Scope会重新声明一个同名的变量导致父Scope中同名的变量被覆盖，这样在子Scope中对同名变量
+的修改不会同步到父Scope中，只能使用对象类型：如Array/函数/var object = {value:"***"};
+3.Filters/Validators
+a.student.subjects | filter: subjectName |orderBy:'marks'/uppercase/lowercase/currency/orderby
+b.
+4.Service/Factory/IOC,可声明服务/工厂后通过注入的方式进行引用
