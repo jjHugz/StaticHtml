@@ -106,6 +106,14 @@ cd ***  进入文件夹
 cd ..  返回上级
 git rm * -r  删除文件及文件夹
 git ls-files  查看版本库中文件
+//2018/05/28 21:00++
+本地修改了文件未提交，又在公司做了修改后提交，回来后想更新，试了commit/pull都出错
+a.commit:Your branch is behind 'origin/master' by 2 commits, and can be fast-forwarded
+b.pull:error: Your local changes to the following files would be overwritten by merge
+最后通过stash解决：
+a.git stash：备份当前工作区内容到Git栈中
+b.git pull：拉取代码
+c.git stash pop：从Git栈中读取最近一次工作内容，恢复
 
 2018/05/27 16:00
 asp.net中关于表单提交几点问题：
@@ -125,6 +133,22 @@ C.post请求提交后再刷新时浏览器会有提示框，是否要再次提�
 a.IsPostBack时用来判断是初次进入页面还是点击提交表单后的请求
 b.viewstate其实就是因为类似div的表单元素不能提交value，asp.net做的隐藏的存储其值的地方，以供下次读取
 而类似input在viewstate中是找不到的
+7.可禁用整页面或者单个控件ViewState，内网/互联网后台可不禁用，但互联网前端必须禁用listview等控件的ViewState，
+不然asp.net会在html中加入大量的ViewState节点
+8.ViewState之所以存在就是因为html协议是无状态的，它不能记住上次请求的数据这也导致了加大网站流量/降低访问速度
+/机密数据放在表单中的数据欺骗等（这些机密数据应该写入数据库中，通过唯一身份ID进行关联）
+9.浏览器发起请求时，除了表单参数外，还有与网站相关的cookie。所以除了在浏览器可以访问，在服务器也可以访问，
+返回响应后浏览器也会把服务器的cookie更新浏览器的值。cookie与网站相关/存储在浏览器/跨页面，用来存储上述的唯一身份ID是最合适的
+10.互联网优化：图片服务器和主站域名不一样，可以降低cookie流量的传输，在访问图片服务器时不传输主站的cookie
+11.asp.net中http请求每次都会new一个IHttpHandler.注意局部变量的作用域
+
+session：将当前访问用户的相关信息保存在服务端，客户端浏览器用cookie保存ID，服务端通过ID查找对应用户的数据
+1.结构：Dictionary<string,Dictionary<string,object>> data;
+string sessionId = Request.Cookies["MyCookies"];
+通过data[sessionId]获取对应用户的数据
+2.asp.net中已经实现了session，ASP.NetSession,直接拿来存储数据Session["数值"] = ***;
+3.session本质是在服务端为每一个用户开一块内存,当访问量很大的时候服务端的负担太大，所有有一种机制是一段时间没有请求
+服务端会干掉这个session,如果想保持session，需要定时发送一些心跳请求
 
 2018/05/28 17:00
 AngularJS一些重要组成部分：
@@ -138,3 +162,21 @@ a.student.subjects | filter: subjectName |orderBy:'marks'/uppercase/lowercase/cu
 b.$dirty - 状态指示值已被改变/$invalid- 指示值的状态是无效的/$error- 指出确切的错误
 4.Service/Factory/IOC,可声明服务/工厂后通过注入的方式进行引用
 5.内置服务，$http发起XMLHttpRequest请求/$route视图切换（指令ng-view/ng-template/服务$routeProvider）
+
+2018/05/28 22:30
+asp.net中ashx和aspx页面的区别及用法
+1.ashx是一般处理程序，用来处理html请求（IHttpHandler），配合html文件一起使用，相当于网站服务端
+aspx中可读取html文件内容后进行更新再返回，通过write直接往页面输出内容（Response.write/或者输出到context.Response.outputStream），
+所以主要用处是生成一些动态的元素
+2.aspx是webform页面，包含了页面设计（.aspx文件，也就是html）和后台处理(.aspx.cs,也就是服务端)，类似winform的设计方式
+**********************************************************************************
+html发请求Request(指定请求的页面,如ajax中的action)，携带信息:cookie/表单数据/浏览器信息等
+服务端处理，
+Response返回响应给html（Context-Type:json/"text/html"/"image/JPEG"...）,同时返回cookie
+**********************************************************************************
+3.页面中image/js/css/会分别发送请求，且html是无状态的，
+http返回协议中响应码
+a.200-成功
+b.300-对请求做进一步处理，如重定向
+c.400-浏览器请求错误
+d.500-服务器内部错误
