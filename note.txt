@@ -135,5 +135,6 @@ note:这里的继承，在子Scope中使用父Scope普通类型的变量，子Sc
 的修改不会同步到父Scope中，只能使用对象类型：如Array/函数/var object = {value:"***"};
 3.Filters/Validators
 a.student.subjects | filter: subjectName |orderBy:'marks'/uppercase/lowercase/currency/orderby
-b.
+b.$dirty - 状态指示值已被改变/$invalid- 指示值的状态是无效的/$error- 指出确切的错误
 4.Service/Factory/IOC,可声明服务/工厂后通过注入的方式进行引用
+5.内置服务，$http发起XMLHttpRequest请求/$route视图切换（指令ng-view/ng-template/服务$routeProvider）
